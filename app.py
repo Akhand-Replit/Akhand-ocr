@@ -1,10 +1,6 @@
 import streamlit as st
 from PIL import Image
 import pytesseract
-import os
-
-# Set Tesseract path (not needed if installed in system PATH)
-# pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 st.title('বাংলা OCR - Optical Character Recognition')
 st.write('বাংলা ভাষায় লেখা ইমেজ থেকে টেক্সট নিরূপণ')
@@ -13,7 +9,7 @@ uploaded_file = st.file_uploader("একটি ইমেজ ফাইল আপ�
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    st.image(image, caption='আপলোড করা ইমেজ', use_column_width=True)
+    st.image(image, caption='আপলোড করা ইমেজ', use_container_width=True)
     
     with st.spinner('ইমেজ প্রসেস করা হচ্ছে...'):
         # Perform OCR with Bengali language
