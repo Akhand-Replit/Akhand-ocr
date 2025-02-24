@@ -7,3 +7,6 @@ A Streamlit-based web application for Bengali text recognition from images.
 2. Install requirements:
 ```bash
 pip install -r requirements.txt
+
+
+## Failed Project 
