@@ -1,32 +1,35 @@
 import streamlit as st
 from PIL import Image
 import pytesseract
-import numpy as np
+import os
 
-st.title('বাংলা OCR কনভার্টার')
-st.write('বাংলা লেখা সমৃদ্ধ একটি ইমেজ আপলোড করুন')
+# Set Tesseract path (not needed if installed in system PATH)
+# pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
-# File uploader
-uploaded_file = st.file_uploader("একটি ইমেজ নির্বাচন করুন...", type=["jpg", "png", "jpeg"])
+st.title('বাংলা OCR - Optical Character Recognition')
+st.write('বাংলা ভাষায় লেখা ইমেজ থেকে টেক্সট নিরূপণ')
+
+uploaded_file = st.file_uploader("একটি ইমেজ ফাইল আপলোড করুন...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    # Display the image
     image = Image.open(uploaded_file)
-    st.image(image, caption='আপলোডকৃত ইমেজ', use_column_width=True)
+    st.image(image, caption='আপলোড করা ইমেজ', use_column_width=True)
     
-    # Convert image to RGB
-    image = image.convert('RGB')
-    
-    # Perform OCR
-    try:
+    with st.spinner('ইমেজ প্রসেস করা হচ্ছে...'):
+        # Perform OCR with Bengali language
         text = pytesseract.image_to_string(image, lang='ben')
         
-        # Display OCR results
-        st.subheader("পাঠ্য উত্তোলন করা হয়েছে")
-        st.text_area("OCR ফলাফল", text, height=300)
-        
-        # Add copy instructions
-        st.write("উপরের লেখা সিলেক্ট করে Ctrl+C (Windows/Linux) বা Cmd+C (Mac) চাপে কপি করুন")
-        
-    except Exception as e:
-        st.error(f"OCR প্রক্রিয়ায় ত্রুটি: {str(e)}")
+        if text.strip():
+            st.success('OCR সম্পন্ন হয়েছে!')
+            st.subheader("নিরূপিত টেক্সট:")
+            st.code(text)
+            
+            # Add copy button functionality
+            st.download_button(
+                label="টেক্সট কপি করুন",
+                data=text,
+                file_name='extracted_text.txt',
+                mime='text/plain'
+            )
+        else:
+            st.warning("ইমেজ থেকে কোন টেক্সট পাওয়া যায়নি")
